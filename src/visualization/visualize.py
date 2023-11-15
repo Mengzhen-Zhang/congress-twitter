@@ -1,16 +1,16 @@
 from typing import Optional
-from stop_words import stop_words
 from collections import Counter
 import pandas as pd
 from wordcloud import wordcloud
 import matplotlib.pyplot as plt
 from matplotlib.axes import Axes
-from features.build_features import interim_path
-from data.stop_words import stop_words
+from const import PROCESSED_DATA_ROOT
+from src.data.stop_words import stop_words
 import seaborn as sns
 
-tweets = pd.read_csv("../../data/interim/tweets.csv")
-popular_member_themes = pd.read_csv(f"{interim_path}/popular_member_themes.csv")
+tweets = pd.read_csv(PROCESSED_DATA_ROOT.joinpath("tweets.csv"))
+popular_member_themes = pd.read_csv(PROCESSED_DATA_ROOT.joinpath("popular_member_themes.csv"))
+theme_year_count = pd.read_csv(PROCESSED_DATA_ROOT.joinpath("theme_year_count.csv"))
 
 def get_word_cloud(year, ax: Optional[Axes]=None):
     assert ax is not None
@@ -33,10 +33,10 @@ def make_word_cloud_grid():
     fig, ax = plt.subplots(5, 2)
     fig.set_figheight(15)
     fig.set_figwidth(15)
-    tweets = pd.read_csv(f"{interim_path}/tweets.csv")
+    tweets = pd.read_csv(f"{PROCESSED_DATA_ROOT}/tweets.csv")
     for i in range(5):
         for j in range(2):
-            get_word_cloud(tweets['year'].unique().reshape((5, 2))[i, j], ax=ax[i, j])
+            get_word_cloud(tweets['year'].dropna().unique().reshape((5, 2))[i, j], ax=ax[i, j])
     plt.tight_layout()
     plt.show()
     plt.close()
@@ -48,13 +48,17 @@ def plot_theme_by_name(year, ax=None):
     ax.set_xticklabels(ax.get_xticklabels(), rotation=0)
     ax.set_title(year)
 
+def plot_theme_year():
+    sns.set_theme()
+    sns.lineplot(x=theme_year_count['year'], y=theme_year_count['count'], hue=theme_year_count['theme'])
+
 def make_theme_grid():
     fig, ax = plt.subplots(3, 3)
     fig.set_figheight(20)
     fig.set_figwidth(20)
     for i in range(3):
         for j in range(3):
-            year = tweets['year'].unique()[1:].reshape((3,3))[i,j]
+            year = tweets['year'].dropna().unique()[1:].reshape((3,3))[i,j]
             plot_theme_by_name(year, ax=ax[i, j])
     plt.tight_layout()
     plt.show()
