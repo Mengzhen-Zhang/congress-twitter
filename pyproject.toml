@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "congress-twitter"
+version = "0.1.0"
+description = ""
+authors = ["Mengzhen Zhang <mengzhen.zhang@outlook.com>"]
+readme = "README.md"
+# packages = [
+#          {include = "models", from="src"},
+#          {include = "data", from="src"},
+#          {include = "features", from="src"},
+#          {include = "visualization", from="src"}
+#          ]
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.13"
+pandas = "^2.1.3"
+seaborn = "^0.13.0"
+numpy = "^1.26.1"
+wordcloud = "^1.9.2"
+matplotlib = "^3.8.1"
+textblob = "^0.17.1"
+scikit-learn = "^1.3.2"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.11.0"
+jupyterlab = "^4.0.8"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
